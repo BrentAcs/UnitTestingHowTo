@@ -75,3 +75,11 @@
 
 ### Refs:
 unit test naming:  https://dzone.com/articles/7-popular-unit-test-naming
+
+## CURLs
+
+`curl --location --request GET 'https://localhost:7028/CatFacts/getSingle' \
+--header 'accept: text/plain'`
+
+`curl --location --request GET 'https://localhost:7028/CatFacts/getMany?maxFacts=7' \
+--header 'accept: */*'`
