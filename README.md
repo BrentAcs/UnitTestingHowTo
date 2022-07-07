@@ -1,57 +1,60 @@
 ## Unit Testing How To
 
 ### Why unit tests are important.
-- Why we leverage them for improved code quality
-- How we leverage them for improved code quality
+- Improved code quality
+- Saves developer time / company money
+- Provides supporting documentation
+- Promotes re-usability and reliability
+- Reduces code complexity
 
 ### Why do we write unit tests?
-- improve quality
-- test code in isolation
+- Test code in isolation
   - testing code in concert is an integration test, not a unit test
-- pushes us to break code into smaller/testable pieces
-- verify code preforms correctly in:
+- Pushes us to break code into smaller/testable pieces
+- Verify code preforms correctly as early in the development cycle as possible
 - When used properly, Unit tests become two things:
     - A sort of ever running acceptance criteria.
     - a sort of developers documentation
 - it's a super-fun challenge that rewards us in knowing our code is a SOLID as possible before we hit 'Create' on the PR.
 
 ### What don't we test?
-- only methods with return values
-- one happy path so that it 'works'
+- Only methods with return values
+- One happy path such that the PR passes a PR gate
 
 ### What do we test?
-- all the things
-- all public class methods
-  - If properly covered, private methods *should* be covered by default
-- all conceivable cases:
-    - valid situations (happy paths), examples:
+- All the things
+- All public class methods
+  - If properly covered, private/protected methods *should* be covered by default
+- All conceivable cases:
+    - Valid situations (happy paths), examples:
         - Was the return value correct
-        - where any out/ref parameters susccess
+        - Where any out/ref parameters success
         - Were external services called with expected values
-    - invalid situations (unhappy paths)
-        - bad data (null, empty, incorrect format, etc..)
-        - unexpected results from calls
-        - exceptions from calls
-    - exceptional cases
-        - exceptions thrown are of known types
-        - handles
+    - Invalid situations (unhappy paths)
+        - Bad data (null, empty, incorrect format, etc..)
+        - Unexpected results from calls
+        - Exceptions from calls
+    - Exceptional cases
+        - Exceptions thrown are of known types
+        - Handles handle-able exceptions 
 
 ### How to identify what to test?
 - Ask ourselves three questions:
-  - what are the happy paths?
-    - what is the complete set of inputs that it expects
-      - what data will exercise every path thru a call?
-    - what are the expected results for external calls
-  - what are the unhappy paths?
-    - what values supplied as args could be
+  - What are the happy paths?
+    - What is the complete set of inputs that it expects
+      - What data will exercise every path thru a call?
+    - What are the expected results for external calls
+  - What are the unhappy paths?
+    - What values supplied as args could be
       - null?
-      - out of range?
-      - improperly formatted?
-    - for external calls:
-      - what could go wrong?         
-  - what exceptions are expected?
-    - for bad data?
-    - made by external calls
+      - Out of range?
+      - Improperly formatted?
+      - etc...
+    - For external calls:
+      - What could go wrong?         
+  - What exceptions are expected?
+    - For bad data?
+    - Made by external calls
 
 ### So. how *do* write unit tests?
 - Triple A
@@ -61,9 +64,9 @@
 - The holy grail: Red, Green, Refactor
 - Types of tests (using XUnit terminology)
   - Fact
-    - test a single condition
+    - Test a single condition
   - Theory
-    - test a set of related conditions (cases)
+    - Test a set of related conditions (cases)
 
 ### Demonstration Topics
 - FluentAssertions
