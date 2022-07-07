@@ -1,53 +1,54 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DemoRestApi.Models;
+﻿using DemoRestApi.Models;
 using DemoRestApi.Services;
-using FluentValidation;
-using MediatR;
 
 namespace DemoRestApi.Actions;
 
 public class GetCatFact
 {
-   public class Request : IRequest<Response>
-   {
-      public int NumberOfFacts { get; set; } = 1;
-   }
+    private const int MinFacts = 1;
+    private const int MaxFacts = 5;
 
-   public class Response
-   {
-      public IEnumerable<CatFact>? Facts { get; set; }
-   }
+    public class Request : IRequest<Response>
+    {
+        public int NumberOfFacts { get; set; } = 1;
+    }
 
-   public class Handler : IRequestHandler<Request, Response>
-   {
-      private readonly ILogger<Handler> _logger;
-      private readonly ICatFactApiClient _factApiClient;
+    public class Response
+    {
+        public IList<CatFact> Facts { get; set; } = new List<CatFact>();
+    }
 
-      public Handler(ILogger<Handler> logger, ICatFactApiClient factApiClient)
-      {
-         _logger = logger;
-         _factApiClient = factApiClient;
-      }
+    public class Handler : IRequestHandler<Request, Response>
+    {
+        private readonly ILogger<Handler> _logger;
+        private readonly ICatFactApiClient _factApiClient;
 
-      public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
-      {
-         var facts = await _factApiClient.GetFactsAsync(request.NumberOfFacts).ConfigureAwait(false);
-         return new Response {Facts = facts};
-      }
-   }
+        public Handler(ILogger<Handler> logger, ICatFactApiClient factApiClient)
+        {
+            _logger = logger;
+            _factApiClient = factApiClient;
+        }
 
-   public class RequestValidator : AbstractValidator<Request>
-   {
-      private const int MinFacts = 1;
-      private const int MaxFacts = 5;
+        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        {
+            var response = new Response();
+                
+            for(int i = 0; i < request.NumberOfFacts; i++)
+            {
+                var fact = await _factApiClient.GetFactAsync().ConfigureAwait(false);
+                response.Facts.Add(fact);
+            }
 
-      public RequestValidator()
-      {
-         RuleFor(x => x.NumberOfFacts)
-            .GreaterThan(10);
+            return response;
+        }
+    }
 
-         // RuleFor(x => x.NumberOfFacts)
-         //    .InclusiveBetween(MinFacts, MaxFacts);
-      }
-   }
+    public class RequestValidator : AbstractValidator<Request>
+    {
+        public RequestValidator()
+        {
+            RuleFor(x => x.NumberOfFacts)
+               .InclusiveBetween(MinFacts, MaxFacts);
+        }
+    }
 }

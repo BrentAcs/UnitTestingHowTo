@@ -1,8 +1,5 @@
 using DemoRestApi.Actions;
 using DemoRestApi.Models;
-using DemoRestApi.Services;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DemoRestApi.Controllers;
 
@@ -10,34 +7,36 @@ namespace DemoRestApi.Controllers;
 [Route("[controller]")]
 public class CatFactsController : ControllerBase
 {
-   private readonly ILogger<CatFactsController> _logger;
-   private readonly ICatFactApiClient _factApiClient;
-   private readonly IMediator _mediator;
+    private readonly ILogger<CatFactsController> _logger;
+    private readonly IMediator _mediator;
 
-   public CatFactsController(ILogger<CatFactsController> logger, ICatFactApiClient factApiClient, IMediator mediator)
-   {
-      _logger = logger;
-      _factApiClient = factApiClient;
-      _mediator = mediator;
-   }
+    public CatFactsController(
+       ILogger<CatFactsController> logger,
+       IMediator mediator)
+    {
+        _logger = logger;
+        _mediator = mediator;
+    }
 
-   [HttpGet("getSingle")]
-   public async Task<ActionResult<CatFact>> Get()
-   {
-      var fact = await _factApiClient.GetFactAsync().ConfigureAwait(false);
-      if (fact is null)
-         return Problem();
-   
-      return Ok(fact);
-   }
-   
-   [HttpGet("getMany")]
-   public async Task<ActionResult<IEnumerable<CatFact>>> GetFacts(int maxFacts)
-   {
-      var facts = await _mediator
-         .Send(new GetCatFact.Request {NumberOfFacts = maxFacts})
-         .ConfigureAwait(false); 
-      
-      return Ok(facts.Facts);
-   }
+    [HttpGet("getSingle")]
+    public async Task<ActionResult<CatFact>> Get()
+    {
+        var facts = await _mediator.Send(new GetCatFact.Request()).ConfigureAwait(false);
+        var fact = facts.Facts.FirstOrDefault();
+
+        return Ok(fact);
+    }
+
+    [HttpGet("getMany")]
+    public async Task<ActionResult<IEnumerable<CatFact>>> GetFacts([FromQuery] GetCatFact.Request request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+        }
+
+        var facts = await _mediator.Send(request).ConfigureAwait(false);
+
+        return Ok(facts.Facts);
+    }
 }

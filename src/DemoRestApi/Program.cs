@@ -13,15 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 var assemblies = new[] {Assembly.GetExecutingAssembly()};
 
 builder.Services.AddControllers();
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFluentValidation(opt =>
 {
-   opt.RegisterValidatorsFromAssemblyContaining<GetCatFact.RequestValidator>();
-   opt.DisableDataAnnotationsValidation = true;
-   //opt.AutomaticValidationEnabled = true;
+    opt.RegisterValidatorsFromAssemblies(assemblies);
+    //opt.DisableDataAnnotationsValidation = true;
+    //opt.AutomaticValidationEnabled = true;
 });
 builder.Services.AddHttpClient();
 builder.Services.AddMediatR(assemblies);
