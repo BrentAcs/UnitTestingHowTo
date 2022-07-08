@@ -1,3 +1,5 @@
+https://docs.google.com/presentation/d/19UezgqFSdOnI8c0eSouenPKNze9u23htB0iicWcv1R8/edit?usp=sharing
+
 ## Unit Testing How To
 
 ### Why unit tests are important.
@@ -49,9 +51,7 @@
       - null?
       - Out of range?
       - Improperly formatted?
-      - etc...
-    - For external calls:
-      - What could go wrong?         
+    - For external calls, what could go wrong?         
   - What exceptions are expected?
     - For bad data?
     - Made by external calls

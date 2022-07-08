@@ -8,11 +8,13 @@ public class GetCatFact
     private const int MinFacts = 1;
     private const int MaxFacts = 5;
 
+    [ExcludeFromCodeCoverage]
     public class Request : IRequest<Response>
     {
         public int NumberOfFacts { get; set; } = 1;
     }
 
+    [ExcludeFromCodeCoverage]
     public class Response
     {
         public IList<CatFact> Facts { get; set; } = new List<CatFact>();
@@ -29,7 +31,7 @@ public class GetCatFact
             _factApiClient = factApiClient;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Response> Handle(Request request, CancellationToken cancellationToken=default)
         {
             var response = new Response();
                 
