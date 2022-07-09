@@ -88,4 +88,30 @@ public class GetCatFactTests
       // Assert
       response.Facts.Should().HaveCount(numberOfFacts);
    }
+
+   [Fact]
+   public async Task Handle_WillReturnSortedOnLength_WhenSortFlagIsTrue()
+   {
+      // Arrange
+      var testCatFact1 = new CatFact {Fact = "medium length", Length = 13};
+      var testCatFact2 = new CatFact {Fact = "really long length", Length = 18};
+      var testCatFact3 = new CatFact {Fact = "short length", Length = 12};
+      var request = new GetCatFact.Request
+      {
+         NumberOfFacts = 3,
+         SortByLength = true
+      };
+      var apiClientMock = new Mock<ICatFactApiClient>();
+      apiClientMock.SetupSequence(m => m.GetFactAsync())
+         .ReturnsAsync(testCatFact1)
+         .ReturnsAsync(testCatFact2)
+         .ReturnsAsync(testCatFact3);
+      var sut = GetHandler(apiClientMock);
+
+      // Act
+      var response = await sut.Handle(request, CancellationToken.None);
+
+      // Assert
+      response.Facts.Should().BeInAscendingOrder(p => p.Length);
+   }
 }

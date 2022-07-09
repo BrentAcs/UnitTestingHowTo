@@ -12,6 +12,7 @@ public class GetCatFact
     public class Request : IRequest<Response>
     {
         public int NumberOfFacts { get; set; } = 1;
+        public bool SortByLength { get; set; }
     }
 
     [ExcludeFromCodeCoverage]
@@ -39,6 +40,13 @@ public class GetCatFact
             {
                 var fact = await _factApiClient.GetFactAsync().ConfigureAwait(false);
                 response.Facts.Add(fact);
+            }
+
+            if (request.SortByLength)
+            {
+               response.Facts = response.Facts
+                  .OrderBy(p => p.Length)
+                  .ToList();
             }
 
             return response;
